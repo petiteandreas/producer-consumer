@@ -1,0 +1,31 @@
+1(action rules)
+
+1.1	given main thread is alive
+	and query is not locked
+	when actor is not sleeping
+	then actor acts	  
+	
+1.2 given actor acts
+	when actor is producer
+	then action pushes random number
+	
+1.3 given actor acts
+	when actor is consumer
+	then action pops number
+	
+**************************************************************************
+		
+2(actions coordinating rules)
+
+2.1 given query 
+	when query contains more than 100 elements
+	then producers fall asleep
+
+2.1 given query 
+	when query contains no elements
+	then consumers fall asleep	
+		 
+2.1 given query 
+	when query contains less than 80 elements
+	and producers are sleeping	
+	then producers wake up	 
