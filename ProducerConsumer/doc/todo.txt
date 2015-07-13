@@ -1,0 +1,5 @@
+1 - actor should be an abstract class
+2 - actors are daemons
+3 -Queue thread is daemon which starts from main thread with queue as field - 
+	he borns new daemon threads - actors, setting them his queue via constructor
+4 - send queue via constructor	
