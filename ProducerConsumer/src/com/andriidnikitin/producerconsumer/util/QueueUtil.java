@@ -18,6 +18,12 @@ public class QueueUtil {
 	
 	public static final int CONSUMERS_SLEEP = 100;
 
-	public static final int PRODUSERS_SLEEP = 100;
+	public static final int PRODUCERS_SLEEP = 100;	
+
+	public static final int SECOND = 1000;	
+
+	public static void showElements(int amount){
+			System.out.println("Elements in queue - " + amount);
+	}
 
 }

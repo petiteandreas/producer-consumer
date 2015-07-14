@@ -4,45 +4,55 @@ import com.andriidnikitin.producerconsumer.ElementQueue;
 
 import static com.andriidnikitin.producerconsumer.util.QueueUtil.*;
 
-public class Consumer extends Thread implements Actor {
+public class Consumer extends Actor {
 	
 	private static volatile boolean isSleeping = false;
+	
+	private ElementQueue queue;
+	
+	private static int id = 0;
 
+	@Override
+	public ElementQueue queue() {
+		return queue;
+	}	
+	
 	public Consumer(ElementQueue queue) {
-		// TODO Auto-generated constructor stub
+		this.queue = queue;
+		id++;
 	}
 
 	@Override
-	public void act(ElementQueue q) throws InterruptedException {
-		synchronized(q){
-			decideWhatToDo(q);
+	public void act() throws InterruptedException {
+		synchronized(queue){
+			decideWhatToDo(queue, SIZE_OF_QUEUE_WHEN_CONSUMERS_WAKE_UP, SIZE_OF_QUEUE_WHEN_CONSUMERS_FALL_ASLEEP);
 			if (isSleeping){
 				Thread.sleep(CONSUMERS_SLEEP);
 			}
-			else q.poll();
+			else queue.poll();
+			System.out.println("element was consumed by" + this);
+			showElements(queue.size());
 		}
-	}
-
-	private void decideWhatToDo(ElementQueue q){		
-			int size = q.size();
-			if (isSleeping) {
-				if (size >= SIZE_OF_QUEUE_WHEN_CONSUMERS_WAKE_UP){
-					isSleeping = false;
-				}
-			}
-			else {
-				if (size <= SIZE_OF_QUEUE_WHEN_CONSUMERS_FALL_ASLEEP){
-					isSleeping = true;
-				}
-				
-			}
+		Thread.yield();
 	}
 	
+	protected  void decideWhatToDo(ElementQueue q, int sizeOfQueWhenWakeUp, int sizeOfQueWhenFallAsleep){		
+		int size = q.size();
+		if (isSleeping) {
+			if (size >= sizeOfQueWhenWakeUp){
+				isSleeping = false;
+			}
+		}
+		else {
+			if (size <= sizeOfQueWhenFallAsleep){
+				isSleeping = true;
+			}
+			
+		}
+	}	
 	@Override
-	public void run() {
-		/*while (!q.stop()){
-			act(q);
-		}*/
+	public String toString() {		
+		return "Consumer #" + id;
 	}
 
 }

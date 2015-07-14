@@ -2,6 +2,7 @@ package com.andriidnikitin.producerconsumer;
 
 import com.andriidnikitin.producerconsumer.actors.Consumer;
 import com.andriidnikitin.producerconsumer.actors.Producer;
+import static com.andriidnikitin.producerconsumer.util.QueueUtil.*;
 
 /**
  * This daemon thread represents process of consuming and producing.
@@ -11,12 +12,13 @@ import com.andriidnikitin.producerconsumer.actors.Producer;
  */
 public class QueueThread extends Thread {
 	
-	private final ElementQueue queue = new ElementQueue();
+	ElementQueue queue;
 	
 	private boolean isStopped = false;
 	
 	public void stopThread() {
 		this.isStopped = true;
+		queue.stop();
 	}
 	
 	public QueueThread(int sizeOfQueue) {
@@ -26,18 +28,25 @@ public class QueueThread extends Thread {
 
 	@Override
 	public void run() {
-		initThreads();
+		this.setPriority(MAX_PRIORITY);
+		initActors();
 		while (!isStopped){
-			System.out.println("Elements in queue - " + queue.size());
+			try {
+				Thread.sleep(SECOND);
+			} catch (InterruptedException e) {
+				System.out.println("Queue thread was stopped.");
+			}
 		}
 	}
 	
 	private void initQueue(int size) {
-		//add default elements
-		
+		queue = new ElementQueue();
+		for (int i=0; i<size; i++){
+			queue.addElement(generateElement());
+		}
 	}
 
-	private void initThreads() {
+	private void initActors() {
 
 		new Producer(queue).start();
 		new Producer(queue).start();
