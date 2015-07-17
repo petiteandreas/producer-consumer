@@ -28,7 +28,6 @@ public class QueueThread extends Thread {
 
 	@Override
 	public void run() {
-		this.setPriority(MAX_PRIORITY);
 		initActors();
 		while (!isStopped){
 			try {
@@ -40,10 +39,7 @@ public class QueueThread extends Thread {
 	}
 	
 	private void initQueue(int size) {
-		queue = new ElementQueue();
-		for (int i=0; i<size; i++){
-			queue.addElement(generateElement());
-		}
+		queue = new ElementQueue(size);		
 	}
 
 	private void initActors() {

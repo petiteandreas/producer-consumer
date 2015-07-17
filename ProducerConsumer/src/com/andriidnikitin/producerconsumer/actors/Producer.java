@@ -8,55 +8,28 @@ public class Producer  extends Actor {
 	
 	private ElementQueue queue;
 	
-	private static int id = 0;
-
 	@Override
 	public ElementQueue queue() {
 		return queue;
 	}	
 	
 	
-	private static volatile boolean isSleeping = false;
+	public static volatile boolean isSleeping = false;
 	
 	public Producer(ElementQueue queue) {
-		id++;
 		this.queue = queue;
+		ActorPlanner.register(this);
 	}
 
 	@Override
 	public void act() throws InterruptedException {
-		synchronized(queue){
-			decideWhatToDo(queue, SIZE_OF_QUEUE_WHEN_PRODUCERS_WAKE_UP, SIZE_OF_QUEUE_WHEN_PRODUCERS_FALL_ASLEEP);
-			if (isSleeping){
-				Thread.sleep(PRODUCERS_SLEEP);
-			}
-			else {
-				queue.addElement(generateElement());
-				System.out.println("element was produced by" + this);
-				showElements(queue.size());
-			}
-		}
-		Thread.yield();
+		System.out.println(this + " acted." + queue.addElement(generateElement()) + " in queue.");
+		ActorPlanner.inform(this);
 	}
-
-	protected  void decideWhatToDo(ElementQueue q, int sizeOfQueueWhenWakeUp, int sizeOfQueueWhenFallAsleep){		
-		int size = q.size();
-		if (isSleeping) {
-			if (size <= sizeOfQueueWhenWakeUp){
-				isSleeping = false;
-			}
-		}
-		else {
-			if (size >= sizeOfQueueWhenFallAsleep){
-				isSleeping = true;
-			}
-			
-		}
-	}	
 	
 	@Override
 	public String toString() {		
-		return "Producer #" + id;
+		return "Producer #" + this.getId()%10;
 	}
 
 }

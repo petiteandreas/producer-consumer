@@ -1,5 +1,4 @@
 package com.andriidnikitin.producerconsumer;
-;
 
 public class MainClass {
 	
@@ -10,10 +9,8 @@ public class MainClass {
 		System.out.println("Press q to quit");
 		while (true){
 			try {
-				Thread.sleep(100);
-				//if not pressed - yield
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 	}	
